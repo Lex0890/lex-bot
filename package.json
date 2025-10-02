@@ -1,0 +1,23 @@
+{
+  "name": "lex-bot-ts",
+  "description": "A CommandKit project",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "commandkit dev",
+    "build": "commandkit build",
+    "start": "commandkit start",
+    "format": "prettier --write \"src/**/*.{js,ts}\""
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "commandkit": "^1.2.0-rc.11",
+    "discord.js": "^14.22.1"
+  }
+}
