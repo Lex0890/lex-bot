@@ -17,6 +17,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@commandkit/cache": "^0.0.0-dev.20250512141518",
     "commandkit": "^1.2.0-rc.11",
     "discord.js": "^14.22.1",
     "postgres": "^3.4.7"
