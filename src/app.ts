@@ -7,6 +7,7 @@ const client = new Client({
 });
 
 commandkit.setPrefixResolver(async (message) => {
+  'use cache';
   if (!message.guildId) return '!';
 
   const guild = await sql`SELECT * FROM guilds WHERE id = ${message.guildId}`;
