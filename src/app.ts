@@ -1,6 +1,7 @@
 import { Client } from 'discord.js';
 import sql, { initdb } from '@/utils/db/init.ts';
 import { commandkit } from 'commandkit';
+import getToken from './utils/osu/getOsuToken';
 
 const client = new Client({
   intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent'],
@@ -17,5 +18,7 @@ commandkit.setPrefixResolver(async (message) => {
 });
 
 await initdb();
+
+await getToken();
 
 export default client;
