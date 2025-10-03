@@ -1,5 +1,6 @@
 import sql from '@/utils/db/init';
 import EmbedBuilderTS from '@/utils/discord/embed';
+import getUser from '@/utils/osu/getUser';
 import type { ChatInputCommand, MessageCommand, CommandData } from 'commandkit';
 import { ApplicationCommandOptionType } from 'discord.js';
 
@@ -19,12 +20,27 @@ export const command: CommandData = {
 export const chatInput: ChatInputCommand = async (ctx) => {
   const user = ctx.interaction.options.getString('user');
 
+  if (!user) return;
+
+  const osuUser = await getUser(user);
+
+  if (!osuUser) {
+    const embed = new EmbedBuilderTS()
+      .description(`Could not find osu! user "${user}".`)
+      .color('Red')
+      .timestamp()
+      .build();
+    await ctx.interaction.reply({ embeds: [embed] });
+    return;
+  }
+  const id = osuUser.id as number;
   const query = await sql`
-    INSERT INTO users (discord_id, osu_id)
-    VALUES (${ctx.interaction.user.id}, ${user})
-    ON CONFLICT (discord_id) DO UPDATE SET osu_id = ${user}
+    INSERT INTO users (id, osu_id)
+    VALUES (${ctx.interaction.user.id}, ${id})
+    ON CONFLICT (id) DO UPDATE SET osu_id = ${id}
     RETURNING *;
   `;
+
   const embed = new EmbedBuilderTS()
     .description(`${user} has been linked to your discord account.`)
     .color('Green')
@@ -47,12 +63,25 @@ export const message: MessageCommand = async (ctx) => {
     return;
   }
 
+  const osuUser = await getUser(user);
+  if (!osuUser) {
+    const embed = new EmbedBuilderTS()
+      .description(`Could not find osu! user "${user}".`)
+      .color('Red')
+      .timestamp()
+      .build();
+    await ctx.message.reply({ embeds: [embed] });
+    return;
+  }
+
+  const id = osuUser.id as number;
+
   const query = await sql`
-    INSERT INTO users (discord_id, osu_id)
-    VALUES (${ctx.message.author.id}, ${user})
-    ON CONFLICT (discord_id) DO UPDATE SET osu_id = ${user}
-    RETURNING *;
-  `;
+  INSERT INTO users (discord_id, osu_id)
+  VALUES (${ctx.message.author.id}, ${id})
+  ON CONFLICT (discord_id) DO UPDATE SET osu_id = ${id}
+  RETURNING *;
+`;
   const embed = new EmbedBuilderTS()
     .description(`${user} has been linked to your discord account.`)
     .color('Green')
