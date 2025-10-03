@@ -1,10 +1,17 @@
 import pg from 'postgres';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const query = fs.readFileSync(path.join(__dirname, 'src', 'utils', 'db', 'init.sql'), 'utf8');
+// In development, files are compiled to .commandkit directory, but SQL files remain in src
+// So we need to resolve the path relative to the source directory
+const queryPath = __dirname.includes('.commandkit')
+  ? path.resolve(process.cwd(), 'src', 'utils', 'db', 'init.sql')
+  : path.resolve(__dirname, 'init.sql');
+
+const query = fs.readFileSync(queryPath, 'utf8');
 
 const sql = pg(process.env.DATABASE_URL as string);
 
@@ -14,7 +21,9 @@ export async function initdb(): Promise<void> {
 }
 
 async function runMigrations() {
-  const migrationsDir = path.join(__dirname, 'src', 'utils', 'db', 'migrations');
+  const migrationsDir = __dirname.includes('.commandkit')
+    ? path.resolve(process.cwd(), 'src', 'utils', 'db', 'migrations')
+    : path.resolve(__dirname, 'migrations');
   const files = fs.readdirSync(migrationsDir);
   for (const file of files) {
     if (!file) break;

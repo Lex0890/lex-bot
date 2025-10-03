@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY,         
     username TEXT NOT NULL,        
     joined_at TIMESTAMP DEFAULT NOW(),
-    is_bot BOOLEAN DEFAULT FALSE
-    osu_id BIGINT 
+    is_bot BOOLEAN DEFAULT FALSE,
+    osu_id BIGINT
 );
 
 -- Tabla de servidores (guilds)
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS guilds (
     id BIGINT PRIMARY KEY,         
     name TEXT NOT NULL,
     owner_id BIGINT REFERENCES users(id),
-    log_channel_id BIGINT   
+    log_channel_id BIGINT,   
     prefix TEXT DEFAULT '!',
     created_at TIMESTAMP DEFAULT NOW()
 );
