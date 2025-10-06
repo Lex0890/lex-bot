@@ -6,7 +6,7 @@ const handler: EventHandler<'messageCreate'> = async (message) => {
 
   await sql`INSERT INTO guilds (id, name) VALUES (${message.guildId}, ${message.guild?.name ?? 'null'}) ON CONFLICT DO NOTHING`;
 
-  await sql`INSERT INTO users (id, username) VALUES (${(message.author.id, message.author.username)}) ON CONFLICT DO NOTHING`;
+  await sql`INSERT INTO users (id, username) VALUES (${message.author.id}, ${message.author.username}) ON CONFLICT DO NOTHING`;
 };
 
 export default handler;
