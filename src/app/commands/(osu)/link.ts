@@ -77,11 +77,11 @@ export const message: MessageCommand = async (ctx) => {
   const id = osuUser.id as number;
 
   const query = await sql`
-  INSERT INTO users (discord_id, osu_id)
-  VALUES (${ctx.message.author.id}, ${id})
-  ON CONFLICT (discord_id) DO UPDATE SET osu_id = ${id}
-  RETURNING *;
-`;
+    INSERT INTO users (id, username, osu_id)
+    VALUES (${ctx.message.author.id}, ${ctx.message.author.username}, ${id})
+    ON CONFLICT (id) DO UPDATE SET osu_id = ${id}
+    RETURNING *;
+  `;
   const embed = new EmbedBuilderTS()
     .title(`${user} has been linked to your discord account.`)
     .color('Green')
