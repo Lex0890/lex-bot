@@ -26,7 +26,7 @@ export const chatInput: ChatInputCommand = async (ctx) => {
 
   if (!osuUser) {
     const embed = new EmbedBuilderTS()
-      .description(`Could not find osu! user "${user}".`)
+      .title(`Could not find osu! user "${user}".`)
       .color('Red')
       .timestamp()
       .build();
@@ -35,14 +35,14 @@ export const chatInput: ChatInputCommand = async (ctx) => {
   }
   const id = osuUser.id as number;
   const query = await sql`
-    INSERT INTO users (id, osu_id)
-    VALUES (${ctx.interaction.user.id}, ${id})
+    INSERT INTO users (id,username, osu_id)
+    VALUES (${ctx.interaction.user.id},${ctx.interaction.user.username}, ${id})
     ON CONFLICT (id) DO UPDATE SET osu_id = ${id}
     RETURNING *;
   `;
 
   const embed = new EmbedBuilderTS()
-    .description(`${user} has been linked to your discord account.`)
+    .title(`${user} has been linked to your discord account.`)
     .color('Green')
     .timestamp()
     .build();
@@ -54,7 +54,7 @@ export const message: MessageCommand = async (ctx) => {
   const user = ctx.message.content.split(' ')[1];
   if (!user) {
     const embed = new EmbedBuilderTS()
-      .description('Please provide a user to link.')
+      .title('Please provide a user to link.')
       .color('Red')
       .timestamp()
       .build();
@@ -66,7 +66,7 @@ export const message: MessageCommand = async (ctx) => {
   const osuUser = await getUser(user);
   if (!osuUser) {
     const embed = new EmbedBuilderTS()
-      .description(`Could not find osu! user "${user}".`)
+      .title(`Could not find osu! user "${user}".`)
       .color('Red')
       .timestamp()
       .build();
@@ -83,7 +83,7 @@ export const message: MessageCommand = async (ctx) => {
   RETURNING *;
 `;
   const embed = new EmbedBuilderTS()
-    .description(`${user} has been linked to your discord account.`)
+    .title(`${user} has been linked to your discord account.`)
     .color('Green')
     .timestamp()
     .build();
