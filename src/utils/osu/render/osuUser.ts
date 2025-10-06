@@ -44,7 +44,7 @@ async function renderProfileCard(osuUser: UserProfile, requester: string) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(osuUser?.username ?? 'Null', 400, 75);
-  Logger.info(osuUser?.country_code);
+  // Logger.info(osuUser?.country_code);
 
   // 4️⃣ Mostrar stats
   const image = await loadImage(
@@ -58,7 +58,7 @@ async function renderProfileCard(osuUser: UserProfile, requester: string) {
   ctx.fillText(`#${osuUser?.statistics?.global_rank ?? '0'}`, 585, 282);
   ctx.fillText(`#${osuUser?.statistics?.country_rank ?? '0'}`, 600, 353);
   const textWidth = ctx.measureText(`#${osuUser?.statistics?.country_rank ?? '0'}`).width;
-  Logger.debug(textWidth);
+  // Logger.debug(textWidth);
   ctx.drawImage(image, 600 + textWidth + 10, 353 - 32 / 2, 32, 32);
   ctx.fillText(`${Math.floor((osuUser?.statistics?.hit_accuracy ?? 0) * 100) / 100}%`, 615, 423);
   ctx.fillText(`${osuUser?.statistics?.level?.current ?? 0}`, 635, 490);
