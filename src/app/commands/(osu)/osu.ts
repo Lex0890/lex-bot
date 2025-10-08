@@ -64,8 +64,15 @@ export const chatInput: ChatInputCommand = async (ctx) => {
 };
 
 export const message: MessageCommand = async (ctx) => {
-  const user = ctx.message.content.split(' ')[1] || ctx.message.author.id;
+  // Extrae args respetando comillas
+  const regex = /"([^"]+)"|(\S+)/g;
+  const matches = [...ctx.message.content.matchAll(regex)];
 
+  // Convierte matches a array de strings
+  const args = matches.map((m) => m[1] ?? m[2]);
+
+  // args[0] es el comando (!message), args[1] es el primer argumento
+  const user = args[1] || ctx.message.author.id;
   let osu_id: string | undefined;
 
   if (hasUserMention(user)) {
